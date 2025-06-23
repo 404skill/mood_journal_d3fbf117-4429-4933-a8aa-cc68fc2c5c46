@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: mood-journal-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://journal_user:journal_pass@db:5432/journal_db
+    depends_on:
+      - db
+    networks:
+      - test-net
+
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: journal_user
+      POSTGRES_PASSWORD: journal_pass
+      POSTGRES_DB: journal_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - test-net
+
+  tests:
+    build: ../journal_python_tests
+    container_name: mood-journal-tests
+    depends_on:
+      - app
+    networks:
+      - test-net
+    volumes:
+      - ../journal_python_tests:/app
+
+networks:
+  test-net:
+    driver: bridge
+
+volumes:
+  postgres_data: 
