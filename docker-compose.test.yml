@@ -7,11 +7,17 @@ services:
     ports:
       - "8001:8000"
     environment:
-      DATABASE_URL: postgresql+psycopg2://journal_user:journal_pass@db:5433/journal_db
+      DATABASE_URL: postgresql+psycopg2://journal_user:journal_pass@db:5432/journal_db
     depends_on:
       - db
     networks:
       - test-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   db:
     image: postgres:16
@@ -31,7 +37,8 @@ services:
     build: ../.tests/mood_journal_d3fbf117-4429-4933-a8aa-cc68fc2c5c46
     container_name: mood-journal-tests
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     networks:
       - test-net
     volumes:
