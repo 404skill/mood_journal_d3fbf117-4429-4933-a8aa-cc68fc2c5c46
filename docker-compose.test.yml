@@ -35,7 +35,7 @@ services:
 
   tests:
     build: ../.tests/mood_journal_d3fbf117-4429-4933-a8aa-cc68fc2c5c46
-    container_name: mood-journal-tests
+    container_name: mood-journal-tests-d3fbf117-4429-4933-a8aa-cc68fc2c5c46
     depends_on:
       app:
         condition: service_healthy
