@@ -3,7 +3,7 @@ version: '3.9'
 services:
   app:
     build: .
-    container_name: mood-journal-api
+    container_name: mood-journal-api-d3fbf117-4429-4933-a8aa-cc68fc2c5c46
     ports:
       - "8001:8000"
     environment:
