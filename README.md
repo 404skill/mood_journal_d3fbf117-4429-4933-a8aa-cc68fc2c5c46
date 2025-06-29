@@ -1,41 +1,55 @@
-# Mood Journal API Template
+# Mood Journal API - Minimal FastAPI Template
 
-This is a template for a Mood Journal API project using FastAPI (Python) and PostgreSQL, designed for learning backend engineering concepts.
+A minimal FastAPI starter template with database connection, health endpoint, and migration support.
 
-## Features
-- FastAPI backend
-- PostgreSQL database
-- Dockerized app and database
-- Health check endpoint (`GET /health`)
+## 🚀 Quick Start
 
-## Getting Started
+### Run with Docker Compose
 
-### Prerequisites
-- [Docker](https://www.docker.com/get-started)
-
-### Setup
-3. Install Python dependencies (locally):
-   ```bash
-   pip install
-   ```
-4. Build and start the services:
-   ```bash
-   docker-compose up --build
-   ```
-5. The API will be available at [http://localhost:8000](http://localhost:8000)
-
-### Health Check
-Test the health endpoint:
 ```bash
-curl http://localhost:8000/health
-```
-Response:
-```json
-{"status": "OK"}
+# Start everything (app + database)
+docker-compose up --build
+
+# Or run in background
+docker-compose up -d --build
 ```
 
-## Project Structure
-- `main.py` - FastAPI app entrypoint
-- `Dockerfile` - Containerizes the FastAPI app
-- `docker-compose.yml` - Orchestrates app and database
-- `pyproject.toml` - Python dependencies and project metadata
+The API will be available at http://localhost:8000
+
+### Run Locally (for development)
+
+```bash
+# Start only the database
+docker-compose up -d db
+
+# Install dependencies
+pip install -e .
+
+# Run the application
+python -m app.main
+```
+
+The API will be available at http://localhost:8000
+
+## 🧪 Testing
+
+```bash
+# Test health endpoint
+curl http://localhost:8000/health
+
+# Expected response:
+# {"status": "healthy", "database": "connected"}
+```
+
+## 📁 Project Structure
+
+```
+app/
+├── __init__.py
+├── main.py              # FastAPI app with health endpoint
+└── database.py          # Database connection & session management
+```
+
+---
+
+**Ready to build! 🎉**

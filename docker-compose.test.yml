@@ -8,6 +8,7 @@ services:
       - "8001:8000"
     environment:
       DATABASE_URL: postgresql+psycopg2://journal_user:journal_pass@db:5432/journal_db
+      # HF_TOKEN: ${HF_TOKEN}  # Uncomment when you need Hugging Face API access
     depends_on:
       - db
     networks:

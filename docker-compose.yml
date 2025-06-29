@@ -12,6 +12,22 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U journal_user -d journal_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    build: .
+    command: ["python", "scripts/run_migrations.py"]
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://journal_user:journal_pass@db:5432/journal_db
+    depends_on:
+      db:
+        condition: service_healthy
 
   app:
     build: .
@@ -22,9 +38,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql+psycopg2://journal_user:journal_pass@db:5432/journal_db
+      DATABASE_URL: postgresql+asyncpg://journal_user:journal_pass@db:5432/journal_db
+      # HF_TOKEN: ${HF_TOKEN}  # Uncomment when you need Hugging Face API access
     depends_on:
-      - db
+      migrations:
+        condition: service_completed_successfully
 
 volumes:
   postgres_data: 
