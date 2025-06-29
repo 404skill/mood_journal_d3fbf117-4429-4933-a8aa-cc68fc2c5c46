@@ -11,7 +11,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://journal_user:journal_pass@db:5432/journal_db
       # HF_TOKEN: ${HF_TOKEN}  # Uncomment when you need Hugging Face API access
     depends_on:
-      - db
+      migrations:
+        condition: service_completed_successfully
     networks:
       - test-net
     healthcheck:
@@ -34,6 +35,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - test-net
+
+  migrations:
+    build: .
+    command: ["python", "scripts/run_migrations.py"]
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://journal_user:journal_pass@db:5432/journal_db
+    depends_on:
+      db:
+        condition: service_healthy
 
   tests:
     build: ../.tests/mood_journal_d3fbf117-4429-4933-a8aa-cc68fc2c5c46
