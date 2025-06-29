@@ -31,8 +31,7 @@ services:
 
   app:
     build: .
-    container_name: mood-journal-api-d3fbf117-4429-4933-a8aa-cc68fc2c5c46
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     volumes:
       - .:/app
     ports:
