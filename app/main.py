@@ -50,8 +50,12 @@ app.add_middleware(
 async def health_check():
     """Health check endpoint."""
     db_healthy = await check_db_health()
+    
+    status = "OK" if db_healthy else "ERROR"
     return {
-        "status": "OK" if db_healthy else "ERROR",
+        "status": status,
+        "database": "connected" if db_healthy else "disconnected",
+        "environment": ENVIRONMENT
     }
 
 # Root endpoint

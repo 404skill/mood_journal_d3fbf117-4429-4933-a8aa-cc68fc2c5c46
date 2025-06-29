@@ -5,6 +5,7 @@ Database configuration for the Mood Journal API.
 import os
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy import text
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -63,7 +64,7 @@ async def check_db_health() -> bool:
     """Check if database is accessible."""
     try:
         async with engine.begin() as conn:
-            await conn.execute("SELECT 1")
+            await conn.execute(text("SELECT 1"))
         return True
     except Exception:
-        return False 
+        return False
