@@ -51,8 +51,7 @@ async def health_check():
     """Health check endpoint."""
     db_healthy = await check_db_health()
     return {
-        "status": "healthy",
-        "database": "connected" if db_healthy else "disconnected"
+        "status": "OK" if db_healthy else "ERROR",
     }
 
 # Root endpoint
