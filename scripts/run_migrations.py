@@ -10,6 +10,7 @@ import os
 import sys
 from pathlib import Path
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy import text
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -31,13 +32,13 @@ async def run_migrations():
     try:
         async with engine.begin() as conn:
             # Create migrations table if it doesn't exist
-            await conn.execute("""
+            await conn.execute(text("""
                 CREATE TABLE IF NOT EXISTS migrations (
                     id SERIAL PRIMARY KEY,
                     filename VARCHAR(255) NOT NULL UNIQUE,
                     applied_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
                 )
-            """)
+            """))
             
             # Get migration files
             migrations_dir = Path(__file__).parent.parent / "migrations"
@@ -51,8 +52,8 @@ async def run_migrations():
             for migration_file in migration_files:
                 # Check if migration already applied
                 result = await conn.execute(
-                    "SELECT id FROM migrations WHERE filename = %s",
-                    (migration_file.name,)
+                    text("SELECT id FROM migrations WHERE filename = :filename"),
+                    {"filename": migration_file.name}
                 )
                 
                 if result.fetchone():
@@ -69,12 +70,12 @@ async def run_migrations():
                 
                 for statement in statements:
                     if statement:
-                        await conn.execute(statement)
+                        await conn.execute(text(statement))
                 
                 # Record migration as applied
                 await conn.execute(
-                    "INSERT INTO migrations (filename) VALUES (%s)",
-                    (migration_file.name,)
+                    text("INSERT INTO migrations (filename) VALUES (:filename)"),
+                    {"filename": migration_file.name}
                 )
                 
                 print(f"Applied {migration_file.name}")

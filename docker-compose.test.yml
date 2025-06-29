@@ -51,6 +51,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - test-net
 
   tests:
     build: ../.tests/mood_journal_d3fbf117-4429-4933-a8aa-cc68fc2c5c46
