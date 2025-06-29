@@ -53,9 +53,7 @@ async def health_check():
     
     status = "OK" if db_healthy else "ERROR"
     return {
-        "status": status,
-        "database": "connected" if db_healthy else "disconnected",
-        "environment": ENVIRONMENT
+        "status": status
     }
 
 # Root endpoint
